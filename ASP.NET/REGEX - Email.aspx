@@ -1,0 +1,1 @@
+<asp:RegularExpressionValidator ID="rexpMail" runat="server" CssClass="required" Display="Dynamic" ErrorMessage="* El formato del correo es incorrecto." ValidationExpression="^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$" ControlToValidate="txtEmail"></asp:RegularExpressionValidator>
