@@ -1,0 +1,1 @@
+CAST(FLOOR(CAST(@dateParam AS float)) AS DateTime)
