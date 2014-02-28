@@ -1,0 +1,40 @@
+<!--ASPX-->
+<asp:GridView ID="grdRuta" runat="server" 
+    AutoGenerateColumns="false" CssClass="table table-list-search" 
+      AllowPaging="true" PageSize="8" OnPageIndexChanging="grdRuta_PageIndexChanging" >
+    <Columns>
+        <asp:BoundField DataField="oficina_desc" HeaderText="OFICINA" />
+        <asp:BoundField DataField="tipo_desc" HeaderText="TIPO" />
+        <asp:BoundField DataField="localidad" HeaderText="LOCALIDAD" />
+        <asp:BoundField DataField="direccion1" HeaderText="DIRECCIÓN" />
+        <asp:BoundField DataField="Contacto" HeaderText="CONTACTO" />
+        <asp:BoundField DataField="cargo_desc" HeaderText="CARGO" />
+        <asp:BoundField DataField="card" HeaderText="TARJETA" />
+        <asp:BoundField DataField="telefono" HeaderText="TELF" />
+        <asp:BoundField DataField="movil" HeaderText="MOVIL" />
+        <asp:BoundField DataField="zona_desc" HeaderText="ZONA" />
+    </Columns>
+</asp:GridView>
+
+<!--.CS-->
+private void fillRpt()
+{   DataTable dt = new DataTable();    
+    //string strgestor = Request.QueryString["ge"];
+    int gestorId = int.Parse(Request.QueryString["gId"]);
+    int zonaId = int.Parse(Request.QueryString["zId"]);
+    int activa = int.Parse(Request.QueryString["activa"]);
+
+    OfficeDB Odb = new OfficeDB();
+    dt = Odb.GetRutaByGestor(gestorId, zonaId, Convert.ToBoolean(activa));
+    grdRuta.DataSource = dt;
+    grdRuta.DataBind();
+
+    grdRuta.UseAccessibleHeader = true;
+    grdRuta.HeaderRow.TableSection = TableRowSection.TableHeader;
+}
+
+protected void grdRuta_PageIndexChanging(object sender, GridViewPageEventArgs e)
+{
+    grdRuta.PageIndex = e.NewPageIndex;
+    fillRpt();
+}
