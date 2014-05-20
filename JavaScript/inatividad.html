@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      var pepe;
+      function ini() {
+        pepe = setTimeout('location="index.html"',5000); // 5 segundos
+      }
+      
+      function parar() {
+        clearTimeout(pepe);
+        pepe = setTimeout('location="index.html"',5000); // 5 segundos
+      }
+    </script>
+  </head>
+  <body onload="ini()" onkeypress="parar()" onclick="parar()">
+  
+  </body>
+</html>  
