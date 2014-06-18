@@ -1,0 +1,36 @@
+function getActividades(pedidoId, designerId) {
+   $.ajax({
+       url: 'hndActividad.ashx',
+       type: 'POST',
+       data: JSON.stringify({ "Pedido_Id": pedidoId, "Designer_Id": designerId }),
+       contentType: 'application/json; charset=utf-8',
+       success: function(data) {
+          $("#dvActividadesBlock").html('');
+          $("#dvActividadesBlock").html(data);
+       },
+       error: function(request, status, error) {
+           console.log(error.toString());
+       }
+   });
+}
+
+/*CODE BEHIND*/
+[WebService(Namespace = "crmActividadHandler")]
+[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+public class hndActividad : IHttpHandler
+{
+
+    public void ProcessRequest(HttpContext context)
+    {
+        context.Response.ContentType = "application/json";
+        var data = context.Request;
+        var sr = new StreamReader(data.InputStream);
+        var stream = sr.ReadToEnd();    
+
+        var javaScriptSerializer = new JavaScriptSerializer();
+        var actividad = javaScriptSerializer.Deserialize<Classes.Actividad>(stream);
+
+        context.Response.ContentType = "application/text";
+        context.Response.Write(GEN_ListOfActividad(actividad)); //RESPUESTA de 'texto plano' PARA LA LLAMADA AJAX (Data)
+
+    }
