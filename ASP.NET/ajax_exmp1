@@ -1,0 +1,86 @@
+/*SCRIPT*/
+
+//objeto de tipo Contadores, para enviar luego por AJAX.
+var Contadores = {
+    cPendiente: "0",
+    cProceso: "0",
+    cPedienteC: "0",
+    cTaller: "0",
+    cImprenta: "0",
+    cEntregar: "0",
+    cTerminado: "0",
+    cOtro: "0",
+    cProximo: "0",
+    cPermanente: "0",
+    cCancelado: "0",
+    cDeposito: "0"
+};
+
+//Esta llamda AJAX, llama a un handler en el servidor:
+function getCounters() {
+   $.ajax({
+       url: 'hndPedido.ashx',
+       type: 'POST',
+       data: JSON.stringify(Contadores),
+       contentType: 'application/json; charset=utf-8',
+       success: function(data) {
+       },
+       error: function(request, status, error) {
+           console.log(error.toString());
+       }
+   });
+}
+
+//HANDLER que manejará la solicitud AJAX
+[WebService(Namespace = "crmHandler")]
+[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+public class hndPedido : IHttpHandler
+{
+
+    public void ProcessRequest(HttpContext context)
+    {
+        try
+        {
+            context.Response.ContentType = "application/json";
+            var data = context.Request;
+            var sr = new StreamReader(data.InputStream);
+            var stream = sr.ReadToEnd();
+
+            var javaScriptSerializer = new JavaScriptSerializer();
+            var PostedData = javaScriptSerializer.Deserialize<Contadores>(stream);
+
+            PostedData.cPendiente = dbClasses.informesDB.GET_Counter_Pendiente();
+            PostedData.cProceso = dbClasses.informesDB.GET_Counter_EnProceso();
+            PostedData.cPedienteC = dbClasses.informesDB.GET_Counter_PendienteCliente();
+            PostedData.cTaller = dbClasses.informesDB.GET_Counter_Taller();
+            PostedData.cImprenta = dbClasses.informesDB.GET_Counter_Imprenta();
+            PostedData.cEntregar = dbClasses.informesDB.GET_Counter_Entregar();
+            PostedData.cTerminado = dbClasses.informesDB.GET_Counter_Terminado();
+            PostedData.cOtro = dbClasses.informesDB.GET_Counter_Otro();
+            PostedData.cProximo = dbClasses.informesDB.GET_Counter_Proximo();
+            PostedData.cPermanente = dbClasses.informesDB.GET_Counter_Permanente();
+            PostedData.cCancelado = dbClasses.informesDB.GET_Counter_Cancelado();
+            PostedData.cDeposito = dbClasses.informesDB.GET_Counter_Deposito();
+
+            context.Response.Write(javaScriptSerializer.Serialize(PostedData));
+        }
+        catch (Exception msg) { context.Response.Write(msg.Message); }
+    }
+}
+
+//CLASE Contadores para tratar los datos de la solicitud AJAX.
+public class Contadores
+{
+    public int cPendiente = 0;
+    public int cProceso = 0;
+    public int cPedienteC = 0;
+    public int cTaller = 0;
+    public int cImprenta = 0;
+    public int cEntregar = 0;
+    public int cTerminado = 0;
+    public int cOtro = 0;
+    public int cProximo = 0;
+    public int cPermanente = 0;
+    public int cCancelado = 0;
+    public int cDeposito = 0;
+}
