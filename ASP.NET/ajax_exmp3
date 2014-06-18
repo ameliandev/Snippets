@@ -1,0 +1,27 @@
+function delActividad(actividadId) {
+   $.ajax({
+       url: 'infPedidos.aspx/DEL_Actividad',
+       type: 'POST',
+       data: JSON.stringify({ "actividad_id": actividadId }),
+       contentType: "application/json; charset=utf-8",
+       success: function(data) {
+           $("#ia_" + actividadId).remove();
+       },
+       error: function(request, status, error) {
+           console.log(error.toString());
+       }
+   });
+}
+
+/*CODE BEHIND*/
+[WebMethod]
+//infPedidos.aspx
+public static string DEL_Actividad(string actividad_id)
+{
+    Actividad act = new Actividad() { Actividad_Id = int.Parse(actividad_id) };
+
+    act.Delete();
+    act = null;
+
+    return "Deleted success";
+}
