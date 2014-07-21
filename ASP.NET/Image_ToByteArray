@@ -1,0 +1,6 @@
+private static byte[] ImageToByteArraybyImageConverter(System.Drawing.Image image)
+{
+    ImageConverter imageConverter = new ImageConverter();
+    byte[] imageByte = (byte[])imageConverter.ConvertTo(image, typeof(byte[]));
+    return imageByte;
+}
