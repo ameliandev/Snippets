@@ -1,0 +1,8 @@
+//file, es el fichero obtenido por el lado cliente o a través de código.
+
+using (var binaryReader = new BinaryReader(file.InputStream))
+{
+    byteImageData = binaryReader.ReadBytes(file.ContentLength);
+
+    System.Drawing.Image image = System.Drawing.Image.FromStream(file.InputStream);
+}
