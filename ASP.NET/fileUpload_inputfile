@@ -1,0 +1,53 @@
+//Cómo subir ficheros desde el cliente al servidor con un control Input de tipo File.
+
+//Primero. 
+//Creamos el control, dentro de un Form, en el lado cliente, con los siguientes atributos:
+
+<input type="file" id="takePictureField" name="takePictureField" runat="server" >
+
+<asp:Button id="btnUpload" runat="server" text="Cargar" onClick="btnUpload_Click" >
+
+//Segundo.
+//Creamos un script en el lado Cliente para limpiar el Input de ficheros, ya que es posible que se queden guardados en las recargas de la página
+
+<script type="text/javascript">
+  control = $("#takePictureField");
+  control.replaceWith(control = control.clone(true));
+</script>
+
+//Tercero. 
+//En el servidor, en donde se realiza la llamada del botón 'btnUpload', gestionamos los posibles ficheros de la siguiente manera:
+
+//Consultamos si en el request hay ficheros, ya que el input file, los aloja en el Request cuando hacemos una llamada al servidor.
+
+if (Request.Files["takePictureField"] != null)
+{
+    //Si existen, creamos un HttpPostedFile y le asociamos el fichero alojado.
+    HttpPostedFile file = Request.Files["takePictureField"];
+    
+    //Ya disponemos del fichero. Ahora podemos acceder a todas sus propiedades y transformarlo, guardarlo etc.
+    
+    file.FileName; //Nombre del Fichero
+    file.InputStream //Stream de lectura en bytes del fichero.
+}
+
+//EXTRA
+//Guardar el fichero como imagen física.
+
+using (var binaryReader = new BinaryReader(file.InputStream))
+{
+    try
+    {
+        byteImageData = binaryReader.ReadBytes(file.ContentLength);
+
+        System.Drawing.Image image = System.Drawing.Image.FromStream(file.InputStream);
+        
+        image.save("C:\" + file.Filename);
+
+    }
+    catch (Exception)
+    {
+        //El objeto contiene indices pero están vacíos, por lo tanto no hay una imagen real (No se ha cargado).
+        //throw;
+    }
+}
